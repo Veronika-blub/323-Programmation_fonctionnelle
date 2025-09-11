@@ -86,11 +86,101 @@ var looser = wordsD.Last();
 Console.WriteLine($"The winner is : {winner}\nThe looser is : {looser}");
 
 //Partie 2: Epsilon
-char[] lettre = { 'e', 'a', 'i', 's', 'n', 'r', 't', 'o', 'l', 'u',
-'d', 'c', 'm', 'p', 'é', 'g', 'b', 'v', 'h', 'f',
-'q', 'y', 'x', 'j', 'è', 'à', 'k', 'w', 'z', 'ê',
-'ç', 'ô', 'â', 'î', 'û', 'ù', 'ï', 'á', 'ü', 'ë',
-'ö', 'í' };
+//Trouver une source fiable sur la répartition des lettres en français (A:8.15%, B:0.97%,...) et afficher les mots avec leur valeur Epsilon et uniquement ceux dont la valeur Epsilon est comprise entre 0.5 et 0.95.
+string[] words2 = { "bonjour", "hello", "monde", "vert", "rouge", "bleu", "jaune", "ee" };
+var frequencies = new Dictionary<char, double>
+{
+    { 'e', 12.10 },
+    { 'a', 7.11 },
+    { 'i', 6.59 },
+    { 's', 6.51 },
+    { 'n', 6.39 },
+    { 'r', 6.07 },
+    { 't', 5.92 },
+    { 'o', 5.02 },
+    { 'l', 4.96 },
+    { 'u', 4.49 },
+    { 'd', 3.67 },
+    { 'c', 3.18 },
+    { 'm', 2.62 },
+    { 'p', 2.49 },
+    { 'é', 1.94 },
+    { 'g', 1.23 },
+    { 'b', 1.14 },
+    { 'v', 1.11 },
+    { 'h', 1.11 },
+    { 'f', 1.11 },
+    { 'q', 0.65 },
+    { 'y', 0.46 },
+    { 'x', 0.38 },
+    { 'j', 0.34 },
+    { 'è', 0.31 },
+    { 'à', 0.31 },
+    { 'k', 0.29 },
+    { 'w', 0.17 },
+    { 'z', 0.15 },
+    { 'ê', 0.08 },
+    { 'ç', 0.06 },
+    { 'ô', 0.04 },
+    { 'â', 0.03 },
+    { 'î', 0.03 },
+    { 'û', 0.02 },
+    { 'ù', 0.02 },
+    { 'ï', 0.01 },
+    { 'á', 0.01 },
+    { 'ü', 0.01 },
+    { 'ë', 0.01 },
+    { 'ö', 0.01 },
+    { 'í', 0.01 }
+};
+// Func<string, double> Epsilon = word =>
+// {
+//     double epsilon = 0;
+//     foreach (char c in word.ToLower())
+//     {
+//         if (frequencies.ContainsKey(c))
+//         {
+//             epsilon += frequencies[c];
+//         }
+//     }
+//     return epsilon / word.Length; 
+// };
+// Console.WriteLine("1"+Epsilon(words[0]));
+
+// Func<string[], string[]> DEpsilon = wordsArray =>
+// {
+//     return wordsArray.Where(word =>
+//     {
+//         double eps = Epsilon(word);
+//         return eps >= 0.5 && eps <= 0.95;
+//     }).ToArray();
+// };
+
+// var filteredWords = DEpsilon(words2);
+// Console.WriteLine("tableau: "+String.Join(", ", DEpsilon(words2)));
+
+double Epsilon (string word, Dictionary<char, double> frequencies)
+{
+    return word
+        .GroupBy(c => c)
+        .ToDictionary(group => group.Key, group => group.Count())
+        .Where(c => frequencies.ContainsKey(c.Key))
+        .Sum(c => frequencies[c.Key] / 100.0 / c.Value);
+}
+
+List<string> wordsFiltered = words2
+    .Where(w =>
+    {
+        double e = Epsilon(w, frequencies);
+        return e >= 0.5 && e <= 0.97;
+    })
+    .ToList();
+
+wordsFiltered.ForEach(word => Console.WriteLine(word));
+
+Console.WriteLine(wordsFiltered);
+Console.ReadLine();
+
 
 
 
